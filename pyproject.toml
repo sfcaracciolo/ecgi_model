@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[project]
+name = "ecgi_model"
+version = "0.0.1"
+authors = [
+    {name = "Santiago F. Caracciolo", email = "santiago.caracciolo@gmail.com"},
+]
+description = "A solver of Laplace ODE with Cauchy boundary conditions in a hollow volumen with BEM. "
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+  "bempp-cl"
+]
+test-dependencies = [
+  "regularization_tools @ git+https://github.com/sfcaracciolo/regularization_tools.gitt",
+]
