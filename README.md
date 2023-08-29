@@ -2,6 +2,7 @@
 
 A BEM (Boundary Element Method) solver of Laplace problem with Cauchy boundary conditions: 
 
+\
 $$ \nabla^2 \phi(\mathbf{r}) = 0 \quad \mathbf{r}\in \Omega $$
 
 $$ \phi(\mathbf{r}) = \phi_e \quad \mathbf{r}\in \partial\Omega_e $$
@@ -9,6 +10,7 @@ $$ \phi(\mathbf{r}) = \phi_e \quad \mathbf{r}\in \partial\Omega_e $$
 $$ \frac{\partial \phi}{\partial \mathbf{n}}(\mathbf{r}) = 0 \quad \mathbf{r}\in \partial\Omega_e $$
 
 where the domain is a hollow volumen like this:
+
 <img src="figs/domain.png" alt="drawing" width="347"/>
 
 the model require two meshes as input. The inner and outer surfaces, both must be closed and outpointing normal surfaces.
