@@ -34,4 +34,32 @@ inner_mesh = (
 
 ecgi_model = EcgiModel(outer_mesh, inner_mesh)
 A, B = model.get_transfer_matrices()
+
+# solve using regularization ..
+# if Ni and No are equal, just use model.solve(y)
 ```
+
+## **Examples**
+
+Let $u_1 = 1/2$, $u_2 = \cos(φ)$, $u_3 = \cos(θ)$ and $u_4 = \cos(φ)\sin(θ)$ *a priori* solutions. The potential on the outer mesh is $y_i = A u_i $.
+
+Solving the square case with GMRES we get,
+
+<img src="figs/transfer.png" alt="drawing" width="800"/>
+
+where solid line is $u_i$ and dashed line is the estimation error $\hat{u}_i - u_i$. On the right panel, the boxplots represent the estimation error too.
+
+In the case of ridge regularization, the errors are enhanced,
+
+<img src="figs/reg.png" alt="drawing" width="800"/>
+
+
+### Instability
+
+In order to show the instability effect, we add a very small error on $y_i$ and recompute with GMRES,
+
+<img src="figs/transfer_noised.png" alt="drawing" width="800"/>
+
+where estimation error is brutally increased. However, by applying ridge regularization an acceptable solution is obtained.
+
+<img src="figs/reg_noised.png" alt="drawing" width="800"/>
