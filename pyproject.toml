@@ -18,7 +18,10 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-  "bempp-cl"
+  "bempp-cl",
+  "numba",
+  "meshio",
+  "scipy"
 ]
 test-dependencies = [
   "regularization_tools @ git+https://github.com/sfcaracciolo/regularization_tools.gitt",
