@@ -7,7 +7,10 @@ from ecgi_model import EcgiModel
 import geometric_tools 
 import numpy as np 
 
-path = pathlib.Path('geo/outer_mesh.npz')
+ADD_NOISE = False
+DISCRETIZATION = 'node'
+
+path = pathlib.Path('data/outer_mesh.npz')
 if not path.exists(): 
     outer_sphere = TriangleMesh().create_sphere(radius=1, resolution=10)
     outer_model = HalfEdgeModel(outer_sphere.vertices, outer_sphere.triangles)
@@ -35,9 +38,10 @@ inner_mesh = TriangleMesh(Vector3dVector(projected_vertices), outer_model.triang
 # bem
 _outer_data = ( np.asarray(outer_mesh.vertices), np.asarray(outer_mesh.triangles) )
 _inner_data = ( np.asarray(inner_mesh.vertices), np.asarray(inner_mesh.triangles) )
-ecgi_model = EcgiModel(_outer_data, _inner_data)
+ecgi_model = EcgiModel(_outer_data, _inner_data, discretization=DISCRETIZATION)
 
-path = pathlib.Path('tests/mat.npz')
+
+path = pathlib.Path(f'data/mat_{DISCRETIZATION}.npz')
 if not path.exists(): 
     A, B = ecgi_model.get_transfer_matrices()
     np.savez(path, A=A, B=B)
@@ -46,12 +50,17 @@ else:
     A, B = npz['A'], npz['B']
 
 # smooth functions
-spherical = geometric_tools.cartesian_to_spherical_coords(outer_model.vertices)
+spherical = geometric_tools.cartesian_to_spherical_coords(inner_mesh.vertices)
 ρ, θ, φ = spherical[:,0], spherical[:,1], spherical[:,2]
 us = (  np.full(φ.size, .5), np.cos(φ), np.cos(θ), np.cos(φ)*np.sin(θ) )
+if DISCRETIZATION == 'triangle': 
+    f = lambda x: geometric_tools.interp_vertices_values_to_triangles(inner_mesh.vertices, inner_mesh.triangles, x)
+    us = list(map(f, us))
+
 ylabels = [
     '$1/2$',
     '$\cos(φ)$',
     '$\cos(θ)$',
     '$\cos(φ)\sin(θ)$',
 ]
+

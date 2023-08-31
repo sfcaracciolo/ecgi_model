@@ -4,7 +4,6 @@ from load import *
 """
 Similar to transfer.py, but instead gmres a regularization is performed.
 """
-ADD_NOISE = False
 
 model = Regularizer.ridge(A)
 m, M = .01*model.lambda_range[0], 100.*model.lambda_range[1]
@@ -33,5 +32,5 @@ for i, u0 in enumerate(us):
 axs[-1, 0].set_xlabel('nodes')
 axs[-1, 1].set_xticks([])
 
-plt.savefig(f"figs/reg{'_noised' if ADD_NOISE else ''}.png", dpi = 300, orientation = 'portrait', bbox_inches = 'tight')
+plt.savefig(f"figs/reg_{DISCRETIZATION}{'_noised' if ADD_NOISE else ''}.png", dpi = 300, orientation = 'portrait', bbox_inches = 'tight')
 plt.show()

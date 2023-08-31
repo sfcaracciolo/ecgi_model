@@ -8,8 +8,6 @@ These testing functions are computed from known solutions to compare them after 
 If the known and estimated solutions are close, the method EcgiModel.get_transfer_matrices() is ok.
 """
 
-ADD_NOISE = False
-
 fig, axs = plt.subplots(len(us), 2, sharex='col', sharey=False, width_ratios=[6, 1], figsize=(10,8))
 
 for i, u0 in enumerate(us):
@@ -29,5 +27,5 @@ for i, u0 in enumerate(us):
 axs[-1, 0].set_xlabel('nodes')
 axs[-1, 1].set_xticks([])
 
-plt.savefig(f"figs/transfer{'_noised' if ADD_NOISE else ''}.png", dpi = 300, orientation = 'portrait', bbox_inches = 'tight')
+plt.savefig(f"figs/transfer_{DISCRETIZATION}{'_noised' if ADD_NOISE else ''}.png", dpi = 300, orientation = 'portrait', bbox_inches = 'tight')
 plt.show()
