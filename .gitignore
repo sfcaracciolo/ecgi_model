@@ -7,7 +7,5 @@ dist/
 __pycache__
 share/
 etc/
-*.eps
-*.pdf
-*.npz
+data/
 .vscode/launch.json
