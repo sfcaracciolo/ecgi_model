@@ -96,7 +96,7 @@ class EcgiModel:
         self.u_i = self.k_i_i - .5 * self.id_i_i
         self.u_o = self.k_o_o + .5 * self.id_o_o
 
-    def solve(self, values:np.ndarray):
+    def solve(self, values:np.ndarray, return_all=False):
 
         blocked = bempp.api.BlockedOperator(2, 2)
         blocked[0,0] = self.u_i
@@ -109,7 +109,9 @@ class EcgiModel:
         rhs_fun_1 = self.k_o_i * grid_fun
         rhs_fun_2 = self.u_o * grid_fun
 
-        return bempp.api.linalg.gmres(blocked, [rhs_fun_1, rhs_fun_2], use_strong_form=True, return_residuals=True, return_iteration_count=True)
+        info = bempp.api.linalg.gmres(blocked, [rhs_fun_1, rhs_fun_2], use_strong_form=True, return_residuals=True, return_iteration_count=True)
+            
+        return info if return_all else info[0][0].coefficients
 
     def get_transfer_matrices(self):
 
