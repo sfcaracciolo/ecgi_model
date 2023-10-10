@@ -96,7 +96,10 @@ class EcgiModel:
         self.u_i = self.k_i_i - .5 * self.id_i_i
         self.u_o = self.k_o_o + .5 * self.id_o_o
 
-    def solve(self, values:np.ndarray, return_all=False):
+    def solve(self, values:np.ndarray, return_all : bool = False):
+
+        if values.ndim > 1:
+            values = np.ravel(values)
 
         blocked = bempp.api.BlockedOperator(2, 2)
         blocked[0,0] = self.u_i
@@ -104,14 +107,17 @@ class EcgiModel:
         blocked[1,0] = self.k_i_o
         blocked[1,1] =  - self.v_i_o
         
-        grid_fun = bempp.api.GridFunction(self.outer_space, coefficients=values )
+        grid_fun = bempp.api.GridFunction(self.outer_space, coefficients=values)
 
         rhs_fun_1 = self.k_o_i * grid_fun
         rhs_fun_2 = self.u_o * grid_fun
 
-        info = bempp.api.linalg.gmres(blocked, [rhs_fun_1, rhs_fun_2], use_strong_form=True, return_residuals=True, return_iteration_count=True)
-            
-        return info if return_all else info[0][0].coefficients
+        (u, un), res, _iter, info = bempp.api.linalg.gmres(blocked, [rhs_fun_1, rhs_fun_2], use_strong_form=True, return_residuals=True, return_iteration_count=True)
+
+        if return_all:
+            return (u, un), res, _iter, info
+        
+        return u.coefficients, un.coefficients
 
     def get_transfer_matrices(self):
 
@@ -125,8 +131,8 @@ class EcgiModel:
         W = V_i_o @ np.linalg.inv(V_i_i) 
         A = np.linalg.inv(U_o - W @ K_o_i) @ (K_i_o - W @ U_i)
         
-        Z = K_i_o @ np.linalg.inv(U_i) 
-        B = np.linalg.inv(U_o - Z @ K_o_i) @ (Z @ V_i_i - V_i_o)
+        Z = K_o_i @ np.linalg.inv(U_o) 
+        B = np.linalg.inv(V_i_i - Z @ V_i_o) @ (U_i - Z @ K_i_o)
 
         return A, B
     

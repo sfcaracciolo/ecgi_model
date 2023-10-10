@@ -11,12 +11,15 @@ If the known and estimated solutions are close, the method EcgiModel.get_transfe
 fig, axs = plt.subplots(len(us), 2, sharex='col', sharey=False, width_ratios=[6, 1], figsize=(10,8))
 
 for i, u0 in enumerate(us):
-    y0 = A @ u0
+    y0 = np.dot(A, u0)
+    un0 = np.ravel(np.dot(B, u0))
+
     if ADD_NOISE: y0 += 1e-3*np.max(y0)*np.random.rand(y0.size)
 
-    [u1, t], info, residuals, iterations = ecgi_model.solve(y0)
+    u1, un1 = ecgi_model.solve(y0)
 
-    ru = u1.coefficients - u0
+    ru = u1 - u0
+    run = un1 - un0
 
     axs[i, 0].plot(u0,'-k')
     axs[i, 0].plot(ru,'--k')
